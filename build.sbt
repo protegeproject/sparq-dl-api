@@ -12,10 +12,9 @@ version := "3.0.0"
 
 scalaVersion := "2.12.1"
 
-val owlApiVersion = "5.0.5" // 4.1.3
+javacOptions ++= Seq("-source", "1.6", "-target", "1.6")
 
-libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources())
-  .exclude("com.fasterxml.jackson.core", "jackson-core")
+val owlApiVersion = "5.0.5"
 
 libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-distribution" % owlApiVersion withSources())
 
