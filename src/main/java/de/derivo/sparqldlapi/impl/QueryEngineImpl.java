@@ -1393,7 +1393,8 @@ public class QueryEngineImpl extends QueryEngine
 					
 					Set<OWLAnnotation> annotations = new HashSet<OWLAnnotation>();
 					for(OWLOntology o : reasoner.getRootOntology().getImportsClosure()) {
-						annotations.addAll(EntitySearcher.getAnnotations(anEntity, o, anProp));
+						EntitySearcher.getAnnotations(anEntity, o, anProp).forEach(annotations::add);
+						//annotations.addAll(EntitySearcher.getAnnotations(anEntity, o, anProp));
 					}
 
 					for(OWLAnnotation a : annotations) {
@@ -2117,7 +2118,7 @@ public class QueryEngineImpl extends QueryEngine
 			arg1 = args.get(1); // Property
 			arg2 = args.get(2); // Object
 			OWLEntity anEntity = null;
-			OWLAnnotationProperty anProp = asAnnotationProperty(arg1);
+			final OWLAnnotationProperty anProp = asAnnotationProperty(arg1);
 			final OWLAnnotationAssertionAxiom ax;
 			if(arg2.getType() == QueryArgumentType.URI) {
 				ax = factory.getOWLAnnotationAssertionAxiom(anProp, arg0.getValueAsIRI(), arg2.getValueAsIRI());
@@ -2150,10 +2151,12 @@ public class QueryEngineImpl extends QueryEngine
 			}
 			
 			Set<OWLAnnotation> annotations = new HashSet<OWLAnnotation>();
-			for(OWLOntology o : reasoner.getRootOntology().getImportsClosure()) {
-				annotations.addAll(EntitySearcher.getAnnotations(anEntity, o, anProp));
-			}
-			
+			final OWLEntity anEntityFinal = anEntity; // quick hack
+			reasoner.getRootOntology().importsClosure().forEach( o -> {
+						EntitySearcher.getAnnotations(anEntityFinal, o, anProp).forEach(annotations::add);
+					}
+			);
+
 			if(arg2.isURI()) {
 				for(OWLAnnotation a : annotations) {
 					if(a.getValue() instanceof IRI) {

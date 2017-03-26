@@ -8,20 +8,24 @@ organization := "edu.stanford.protege"
 
 name := "de-derivo-sparqldlapi"
 
-version := "3.0.0"
+version := "3.1.0"
+
 
 scalaVersion := "2.12.1"
 
-javacOptions ++= Seq("-source", "1.6", "-target", "1.6")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
-val owlApiVersion = "5.0.5"
+libraryDependencies +=
+  "net.sourceforge.owlapi" % "owlapi-distribution" % "5.0.5" withSources() withJavadoc()
 
-libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-distribution" % owlApiVersion withSources())
+libraryDependencies +=
+  "org.jdom" % "jdom-legacy" % "1.1.3"
 
-libraryDependencies += "org.jdom" % "jdom-legacy" % "1.1.3"
+libraryDependencies +=
+  "edu.stanford.protege" % "jpaul" % "2.5.1"
 
-libraryDependencies += "edu.stanford.protege" % "jpaul" % "2.5.1"
+libraryDependencies +=
+  "junit" % "junit" % "4.12" % "test"
 
-libraryDependencies += "junit" % "junit" % "3.8.1" % "test"
-
-libraryDependencies += "org.mockito" % "mockito-core" % "2.0.5-beta" % "test"
+libraryDependencies +=
+  "org.mockito" % "mockito-core" % "2.7.19" % "test"
