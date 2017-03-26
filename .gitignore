@@ -25,3 +25,4 @@ META-INF/
 build/
 
 target
+/project/target/
