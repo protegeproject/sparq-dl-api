@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.search.EntitySearcher;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static de.derivo.sparqldlapi.QueryArgument.newLiteral;
 import static de.derivo.sparqldlapi.QueryArgument.newURI;
@@ -490,7 +491,7 @@ public class QueryEngineImpl extends QueryEngine {
 
             if (isDeclared(op)) {
                 Set<OWLObjectPropertyExpression> candidates = reasoner.getEquivalentObjectProperties(op)
-                                                                      .getEntities();
+                                                                      .entities().collect(Collectors.toSet());
                 for (OWLObjectPropertyExpression c : candidates) {
                     if (!c.isAnonymous()) {
                         final QueryBindingImpl new_binding = binding.clone();
@@ -502,7 +503,7 @@ public class QueryEngineImpl extends QueryEngine {
                 }
             }
             else if (isDeclared(dp)) {
-                Set<OWLDataProperty> candidates = reasoner.getEquivalentDataProperties(dp).getEntities();
+                Set<OWLDataProperty> candidates = reasoner.getEquivalentDataProperties(dp).entities().collect(Collectors.toSet());
                 if (bindAndEvalDataPropertyCandidates(query, group, result, binding, prop0Arg, candidates)) {
                     ret = true;
                 }
@@ -514,13 +515,13 @@ public class QueryEngineImpl extends QueryEngine {
 
             if (isDeclared(op)) {
                 Set<OWLObjectPropertyExpression> candidates = reasoner.getEquivalentObjectProperties(op)
-                                                                      .getEntities();
+                                                                      .entities().collect(Collectors.toSet());
                 if (bindAndEvalObjectPropertyCandidates(query, group, result, binding, prop1Arg, candidates)) {
                     ret = true;
                 }
             }
             else if (isDeclared(dp)) {
-                Set<OWLDataProperty> candidates = reasoner.getEquivalentDataProperties(dp).getEntities();
+                Set<OWLDataProperty> candidates = reasoner.getEquivalentDataProperties(dp).entities().collect(Collectors.toSet());
                 if (bindAndEvalDataPropertyCandidates(query, group, result, binding, prop1Arg, candidates)) {
                     ret = true;
                 }
@@ -552,13 +553,13 @@ public class QueryEngineImpl extends QueryEngine {
             OWLDataProperty dp = asDataProperty(superPropArg);
             if (isDeclared(op)) {
                 Set<OWLObjectPropertyExpression> candidates = reasoner.getSubObjectProperties(op, true)
-                                                                      .getFlattened();
+                                                                      .entities().collect(Collectors.toSet());
                 if (bindAndEvalObjectPropertyCandidates(query, group, result, binding, subPropArg, candidates)) {
                     ret = true;
                 }
             }
             else if (isDeclared(dp)) {
-                Set<OWLDataProperty> candidates = reasoner.getSubDataProperties(dp, true).getFlattened();
+                Set<OWLDataProperty> candidates = reasoner.getSubDataProperties(dp, true).entities().collect(Collectors.toSet());
                 if (bindAndEvalDataPropertyCandidates(query, group, result, binding, subPropArg, candidates)) {
                     ret = true;
                 }
@@ -570,13 +571,13 @@ public class QueryEngineImpl extends QueryEngine {
 
             if (isDeclared(op)) {
                 Set<OWLObjectPropertyExpression> candidates = reasoner.getSuperObjectProperties(op, true)
-                                                                      .getFlattened();
+                                                                      .entities().collect(Collectors.toSet());
                 if (bindAndEvalObjectPropertyCandidates(query, group, result, binding, superPropArg, candidates)) {
                     ret = true;
                 }
             }
             else if (isDeclared(dp)) {
-                Set<OWLDataProperty> candidates = reasoner.getSuperDataProperties(dp, true).getFlattened();
+                Set<OWLDataProperty> candidates = reasoner.getSuperDataProperties(dp, true).entities().collect(Collectors.toSet());
                 if (bindAndEvalDataPropertyCandidates(query, group, result, binding, superPropArg, candidates)) {
                     ret = true;
                 }
@@ -609,19 +610,19 @@ public class QueryEngineImpl extends QueryEngine {
 
             if (isDeclared(op)) {
                 Set<OWLObjectPropertyExpression> candidates = reasoner.getSubObjectProperties(op, false)
-                                                                      .getFlattened();
+                                                                      .entities().collect(Collectors.toSet());
 
                 // if not strict we also add all equivalent properties
                 if (!strict) {
-                    candidates.addAll(reasoner.getEquivalentObjectProperties(op).getEntities());
+                    candidates.addAll(reasoner.getEquivalentObjectProperties(op).entities().collect(Collectors.toSet()));
                 }
                 bindAndEvalObjectPropertyCandidates(query, group, result, binding, subPropArg, candidates);
             }
             else if (isDeclared(dp)) {
-                Set<OWLDataProperty> candidates = reasoner.getSubDataProperties(dp, false).getFlattened();
+                Set<OWLDataProperty> candidates = reasoner.getSubDataProperties(dp, false).entities().collect(Collectors.toSet());
                 // if not strict we also add all equivalent properties
                 if (!strict) {
-                    candidates.addAll(reasoner.getEquivalentDataProperties(dp).getEntities());
+                    candidates.addAll(reasoner.getEquivalentDataProperties(dp).entities().collect(Collectors.toSet()));
                 }
                 ret = bindAndEvalDataPropertyCandidates(query, group, result, binding, subPropArg, candidates);
             }
@@ -632,19 +633,19 @@ public class QueryEngineImpl extends QueryEngine {
 
             if (isDeclared(op)) {
                 Set<OWLObjectPropertyExpression> candidates = reasoner.getSuperObjectProperties(op, false)
-                                                                      .getFlattened();
+                                                                      .entities().collect(Collectors.toSet());
 
                 // if not strict we also add all equivalent properties
                 if (!strict) {
-                    candidates.addAll(reasoner.getEquivalentObjectProperties(op).getEntities());
+                    candidates.addAll(reasoner.getEquivalentObjectProperties(op).entities().collect(Collectors.toSet()));
                 }
                 ret = bindAndEvalObjectPropertyCandidates(query, group, result, binding, superPropArg, candidates);
             }
             else if (isDeclared(dp)) {
-                Set<OWLDataProperty> candidates = reasoner.getSuperDataProperties(dp, false).getFlattened();
+                Set<OWLDataProperty> candidates = reasoner.getSuperDataProperties(dp, false).entities().collect(Collectors.toSet());
                 // if not strict we also add all equivalent properties
                 if (!strict) {
-                    candidates.addAll(reasoner.getEquivalentDataProperties(dp).getEntities());
+                    candidates.addAll(reasoner.getEquivalentDataProperties(dp).entities().collect(Collectors.toSet()));
                 }
                 ret = bindAndEvalDataPropertyCandidates(query, group, result, binding, subPropArg, candidates);
             }
@@ -888,7 +889,7 @@ public class QueryEngineImpl extends QueryEngine {
             OWLObjectProperty op1 = asObjectProperty(propertyArg);
             OWLDataProperty dp1 = asDataProperty(propertyArg);
             if (isDeclared(op1)) {
-                Set<OWLNamedIndividual> candidates = reasoner.getObjectPropertyValues(ind0, op1).getFlattened();
+                Set<OWLNamedIndividual> candidates = reasoner.getObjectPropertyValues(ind0, op1).entities().collect(Collectors.toSet());
                 ret = bindAndEvalNamedIndividualCandidates(query, group, result, binding, valueArg, candidates,
                                                            BoundChecking.CHECK_BOUND);
             }
@@ -935,13 +936,13 @@ public class QueryEngineImpl extends QueryEngine {
         }
         else if (ind0Arg.isVar()) {
             Set<OWLNamedIndividual> candidates = reasoner.getDifferentIndividuals(asIndividual(ind1Arg))
-                                                         .getFlattened();
+                                                         .entities().collect(Collectors.toSet());
             ret = bindAndEvalNamedIndividualCandidates(query, group, result, binding, ind0Arg, candidates,
                                                        BoundChecking.CHECK_BOUND);
         }
         else if (ind1Arg.isVar()) {
             Set<OWLNamedIndividual> candidates = reasoner.getDifferentIndividuals(asIndividual(ind0Arg))
-                                                         .getFlattened();
+                                                         .entities().collect(Collectors.toSet());
             ret = bindAndEvalNamedIndividualCandidates(query, group, result, binding, ind1Arg, candidates,
                                                        BoundChecking.CHECK_BOUND);
         }
@@ -961,12 +962,12 @@ public class QueryEngineImpl extends QueryEngine {
                                                        BoundChecking.CHECK_BOUND);
         }
         else if (ind0Arg.isVar()) {
-            Set<OWLNamedIndividual> candidates = reasoner.getSameIndividuals(asIndividual(ind1Arg)).getEntities();
+            Set<OWLNamedIndividual> candidates = reasoner.getSameIndividuals(asIndividual(ind1Arg)).entities().collect(Collectors.toSet());
             ret = bindAndEvalNamedIndividualCandidates(query, group, result, binding, ind0Arg, candidates,
                                                        BoundChecking.CHECK_BOUND);
         }
         else if (ind1Arg.isVar()) {
-            Set<OWLNamedIndividual> candidates = reasoner.getSameIndividuals(asIndividual(ind0Arg)).getEntities();
+            Set<OWLNamedIndividual> candidates = reasoner.getSameIndividuals(asIndividual(ind0Arg)).entities().collect(Collectors.toSet());
             ret = bindAndEvalNamedIndividualCandidates(query, group, result, binding, ind1Arg, candidates,
                                                        BoundChecking.CHECK_BOUND);
         }
@@ -987,12 +988,12 @@ public class QueryEngineImpl extends QueryEngine {
         }
         else if (indArg.isVar()) {
             OWLClass type = asClass(typeArg);
-            Set<OWLNamedIndividual> candidates = reasoner.getInstances(type, strict).getFlattened();
+            Set<OWLNamedIndividual> candidates = reasoner.getInstances(type, strict).entities().collect(Collectors.toSet());
             return bindAndEvalNamedIndividualCandidates(query, group, result, binding, indArg, candidates,
                                                         BoundChecking.CHECK_BOUND);
         }
         else if (typeArg.isVar()) {
-            Set<OWLClass> candidates = reasoner.getTypes(asIndividual(indArg), strict).getFlattened();
+            Set<OWLClass> candidates = reasoner.getTypes(asIndividual(indArg), strict).entities().collect(Collectors.toSet());
             return bindAndEvalClassCandidates(query, group, result, binding, typeArg, candidates, BoundChecking.CHECK_BOUND);
         }
         return false;
@@ -1028,11 +1029,11 @@ public class QueryEngineImpl extends QueryEngine {
             ret = bindAndEvalClassCandidates(query, group, result, binding, cls0Arg, candidates, BoundChecking.CHECK_BOUND);
         }
         else if (cls0Arg.isVar()) {
-            Set<OWLClass> candidates = reasoner.getDisjointClasses(asClass(cls1Arg)).getFlattened();
+            Set<OWLClass> candidates = reasoner.getDisjointClasses(asClass(cls1Arg)).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, cls0Arg, candidates, BoundChecking.CHECK_BOUND);
         }
         else if (cls1Arg.isVar()) {
-            Set<OWLClass> candidates = reasoner.getDisjointClasses(asClass(cls0Arg)).getFlattened();
+            Set<OWLClass> candidates = reasoner.getDisjointClasses(asClass(cls0Arg)).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, cls1Arg, candidates, BoundChecking.CHECK_BOUND);
         }
         return ret;
@@ -1070,12 +1071,12 @@ public class QueryEngineImpl extends QueryEngine {
         }
         else if (arg0.isVar()) {
             Set<OWLClass> candidates = reasoner.getEquivalentClasses(factory.getOWLObjectComplementOf(asClass(
-                    arg1))).getEntities();
+                    arg1))).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, arg0, candidates, BoundChecking.CHECK_BOUND);
         }
         else if (arg1.isVar()) {
             Set<OWLClass> candidates = reasoner.getEquivalentClasses(factory.getOWLObjectComplementOf(asClass(
-                    arg0))).getEntities();
+                    arg0))).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, arg1, candidates, BoundChecking.CHECK_BOUND);
         }
         return ret;
@@ -1113,11 +1114,11 @@ public class QueryEngineImpl extends QueryEngine {
             // Looking for ranges
             if (isDeclaredObjectProperty(propArg)) {
                 OWLObjectProperty property = asObjectProperty(propArg);
-                Set<OWLClass> candidates = reasoner.getObjectPropertyRanges(property, false).getFlattened();
+                Set<OWLClass> candidates = reasoner.getObjectPropertyRanges(property, false).entities().collect(Collectors.toSet());
                 ret = bindAndEvalClassCandidates(query, group, result, binding, rngArg, candidates, BoundChecking.CHECK_BOUND);
             }
             else if (isDeclaredDataProperty(propArg)) {
-                Set<OWLDatatype> candidates = reasoner.getRootOntology().getDatatypesInSignature();
+                Set<OWLDatatype> candidates = reasoner.getRootOntology().datatypesInSignature().collect(Collectors.toSet());
                 for (OWLDatatype c : candidates) {
                     final QueryBindingImpl new_binding = binding.clone();
                     new_binding.set(rngArg, newURI(c.getIRI()));
@@ -1182,13 +1183,13 @@ public class QueryEngineImpl extends QueryEngine {
             // Looking for domains
             if (isDeclaredObjectProperty(propertyArg)) {
                 OWLObjectProperty property = asObjectProperty(propertyArg);
-                Set<OWLClass> candidates = reasoner.getObjectPropertyDomains(property, false).getFlattened();
+                Set<OWLClass> candidates = reasoner.getObjectPropertyDomains(property, false).entities().collect(Collectors.toSet());
                 ret = bindAndEvalClassCandidates(query, group, result, binding, domainArg, candidates,
                                                  BoundChecking.CHECK_BOUND);
             }
             else if (isDeclaredDataProperty(propertyArg)) {
                 OWLDataProperty property = asDataProperty(propertyArg);
-                Set<OWLClass> candidates = reasoner.getDataPropertyDomains(property, false).getFlattened();
+                Set<OWLClass> candidates = reasoner.getDataPropertyDomains(property, false).entities().collect(Collectors.toSet());
                 ret = bindAndEvalClassCandidates(query, group, result, binding, domainArg, candidates,
                                                  BoundChecking.CHECK_BOUND);
             }
@@ -1229,11 +1230,11 @@ public class QueryEngineImpl extends QueryEngine {
             ret = bindAndEvalClassCandidates(query, group, result, binding, clsArg0, candidates, BoundChecking.DO_NOT_CHECK_BOUND);
         }
         else if (clsArg0.isVar()) {
-            Set<OWLClass> candidates = reasoner.getEquivalentClasses(asClass(clsArg1)).getEntities();
+            Set<OWLClass> candidates = reasoner.getEquivalentClasses(asClass(clsArg1)).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, clsArg0, candidates, BoundChecking.DO_NOT_CHECK_BOUND);
         }
         else if (clsArg1.isVar()) {
-            Set<OWLClass> candidates = reasoner.getEquivalentClasses(asClass(clsArg0)).getEntities();
+            Set<OWLClass> candidates = reasoner.getEquivalentClasses(asClass(clsArg0)).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, clsArg1, candidates, BoundChecking.DO_NOT_CHECK_BOUND);
         }
         return ret;
@@ -1253,12 +1254,12 @@ public class QueryEngineImpl extends QueryEngine {
         }
         else if (subClsArg.isVar()) {
             OWLClass superCls = asClass(superClsArg);
-            Set<OWLClass> candidates = reasoner.getSubClasses(superCls, true).getFlattened();
+            Set<OWLClass> candidates = reasoner.getSubClasses(superCls, true).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, subClsArg, candidates, BoundChecking.CHECK_BOUND);
         }
         else if (superClsArg.isVar()) {
             OWLClass subCls = asClass(subClsArg);
-            Set<OWLClass> candidates = reasoner.getSuperClasses(subCls, true).getFlattened();
+            Set<OWLClass> candidates = reasoner.getSuperClasses(subCls, true).entities().collect(Collectors.toSet());
             ret = bindAndEvalClassCandidates(query, group, result, binding, superClsArg, candidates,
                                              BoundChecking.CHECK_BOUND);
         }
@@ -1291,11 +1292,11 @@ public class QueryEngineImpl extends QueryEngine {
                 candidates = getClasses();
             }
             else {
-                candidates = reasoner.getSubClasses(superCls, false).getFlattened();
+                candidates = reasoner.getSubClasses(superCls, false).entities().collect(Collectors.toSet());
             }
             // if not strict we also include all equivalent classIris
             if (mode == SubClassOfMode.NON_STRICT && !superCls.isOWLThing()) {
-                candidates.addAll(reasoner.getEquivalentClasses(asClass(superClsArg)).getEntities());
+                candidates.addAll(reasoner.getEquivalentClasses(asClass(superClsArg)).entities().collect(Collectors.toSet()));
             }
             // Standard reasoning task, so we don't need to check the bound again
             if(bindAndEvalClassCandidates(query, group, result, binding, subClsArg, candidates, BoundChecking.DO_NOT_CHECK_BOUND)) {
@@ -1305,11 +1306,11 @@ public class QueryEngineImpl extends QueryEngine {
         else if (superClsArg.isVar()) {
             // SubClassOf(C ?x)
             OWLClass class0 = asClass(subClsArg);
-            Set<OWLClass> candidates = reasoner.getSuperClasses(class0, false).getFlattened();
+            Set<OWLClass> candidates = reasoner.getSuperClasses(class0, false).entities().collect(Collectors.toSet());
 
             // if not strict we also include all equivalent classIris
             if (mode == SubClassOfMode.NON_STRICT) {
-                candidates.addAll(reasoner.getEquivalentClasses(asClass(subClsArg)).getEntities());
+                candidates.addAll(reasoner.getEquivalentClasses(asClass(subClsArg)).entities().collect(Collectors.toSet()));
             }
             for (OWLClass c : candidates) {
                 new_binding = binding.clone();
@@ -1526,7 +1527,7 @@ public class QueryEngineImpl extends QueryEngine {
 
     private Set<OWLOntology> getImportsClosure() {
         OWLOntology rootOntology = reasoner.getRootOntology();
-        return rootOntology.getOWLOntologyManager().getImportsClosure(rootOntology);
+        return rootOntology.getOWLOntologyManager().importsClosure(rootOntology).collect(Collectors.toSet());
     }
 
     private boolean checkArgs(QueryAtom atom)
@@ -2220,8 +2221,8 @@ public class QueryEngineImpl extends QueryEngine {
                         return false;
                     }
                     Set<OWLAnnotationPropertyDomainAxiom> axioms = reasoner.getRootOntology()
-                                                                           .getAxioms(AxiomType.ANNOTATION_PROPERTY_DOMAIN,
-                                                                                      Imports.INCLUDED);
+                                                                           .axioms(AxiomType.ANNOTATION_PROPERTY_DOMAIN,
+                                                                                      Imports.INCLUDED).collect(Collectors.toSet());
                     for (OWLAnnotationPropertyDomainAxiom ax : axioms) {
                         if (ax.getProperty().equals(ap_0)) {
                             if (ax.getDomain().equals(arg1.getValueAsIRI())) {
@@ -2250,8 +2251,8 @@ public class QueryEngineImpl extends QueryEngine {
                         return false;
                     }
                     Set<OWLAnnotationPropertyRangeAxiom> axioms = reasoner.getRootOntology()
-                                                                          .getAxioms(AxiomType.ANNOTATION_PROPERTY_RANGE,
-                                                                                     Imports.INCLUDED);
+                                                                          .axioms(AxiomType.ANNOTATION_PROPERTY_RANGE,
+                                                                                     Imports.INCLUDED).collect(Collectors.toSet());
                     for (OWLAnnotationPropertyRangeAxiom ax : axioms) {
                         if (ax.getProperty().equals(rng_ap_0)) {
                             if (ax.getRange().equals(arg1.getValueAsIRI())) {
@@ -2462,15 +2463,15 @@ public class QueryEngineImpl extends QueryEngine {
     }
 
     private Set<OWLNamedIndividual> getIndividuals() {
-        return reasoner.getRootOntology().getIndividualsInSignature(Imports.INCLUDED);
+        return reasoner.getRootOntology().individualsInSignature(Imports.INCLUDED).collect(Collectors.toSet());
     }
 
     private Set<OWLObjectProperty> getObjectProperties() {
-        return reasoner.getRootOntology().getObjectPropertiesInSignature(Imports.INCLUDED);
+        return reasoner.getRootOntology().objectPropertiesInSignature(Imports.INCLUDED).collect(Collectors.toSet());
     }
 
     private Set<OWLDataProperty> getDataProperties() {
-        return reasoner.getRootOntology().getDataPropertiesInSignature(Imports.INCLUDED);
+        return reasoner.getRootOntology().dataPropertiesInSignature(Imports.INCLUDED).collect(Collectors.toSet());
     }
 
     private Set<OWLAnnotationProperty> getAnnotationProperties() {
@@ -2478,7 +2479,7 @@ public class QueryEngineImpl extends QueryEngine {
             return cachedAnnotationProperties;
         }
         for (OWLOntology o : getImportsClosure()) {
-            cachedAnnotationProperties.addAll(o.getAnnotationPropertiesInSignature());
+            cachedAnnotationProperties.addAll(o.annotationPropertiesInSignature().collect(Collectors.toSet()));
         }
         return cachedAnnotationProperties;
     }
