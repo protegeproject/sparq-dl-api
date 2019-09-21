@@ -59,7 +59,7 @@ public class QueryImpl extends Query
 	/**
 	 * Remove a result variable from the query.
 	 * 
-	 * @param atom
+	 * @param arg
 	 * @return
 	 */
 	public boolean removeResultVar(QueryArgument arg)

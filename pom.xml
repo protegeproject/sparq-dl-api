@@ -11,7 +11,7 @@
 
     <groupId>edu.stanford.protege</groupId>
     <artifactId>de-derivo-sparqldlapi</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -99,7 +99,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -109,7 +109,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -123,7 +123,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>3.1.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -132,6 +132,7 @@
                         </goals>
                         <configuration>
                             <additionalparam>-Xdoclint:none</additionalparam>
+                            <source>1.8</source>
                         </configuration>
                     </execution>
                 </executions>
