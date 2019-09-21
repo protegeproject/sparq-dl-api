@@ -34,7 +34,7 @@ public abstract class QueryEngine
 	 * 
 	 * @param manager An OWLOntologyManager instance of OWLAPI v3
 	 * @param reasoner An OWLReasoner instance.
-	 * @param strictMode If strict mode is enabled the query engine will throw a QueryEngineException if data types withing the query are not correct (e.g. Class(URI_OF_AN_INDIVIDUAL))
+	 * @param strict If strict mode is enabled the query engine will throw a QueryEngineException if data types withing the query are not correct (e.g. Class(URI_OF_AN_INDIVIDUAL))
 	 * @return an instance of QueryEngine
 	 */
 	public static QueryEngine create(OWLOntologyManager manager, OWLReasoner reasoner, boolean strict)
